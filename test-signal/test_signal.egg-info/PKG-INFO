@@ -1,0 +1,19 @@
+Metadata-Version: 2.1
+Name: test-signal
+Version: 0.1.1
+Summary: read data from modbus
+Home-page: git@gitlab.com:anusha_ahe/test_signal.git
+Author: Anusha
+Author-email: anusha.nss@gmail.com
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Web Environment
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: AHE License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+License-File: LICENSE
+
+UNKNOWN
+

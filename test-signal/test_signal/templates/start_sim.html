@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Simulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #statusMessage {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e7f3fe;
+            color: #31708f;
+            border: 1px solid #bce8f1;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .upload-folder {
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        function showMessage(message) {
+            if (message) {
+                alert(message);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Start Simulation</h1>
+
+        <!--GSIM script start -->
+        <form action="{% url 'simulation_page' %}" method="get">
+            <input type="hidden" name="action" value="run_gsim">
+            <button type="submit" onclick="showMessage('Starting GSIM simulation...')">Run GSIM Simulation</button>
+        </form>
+
+        <!--Test script simulation -->
+        <form action="{% url 'simulation_page' %}" method="get">
+            <input type="hidden" name="action" value="run_test">
+            <button type="submit" onclick="showMessage('Starting Test simulation...')">Run Test Simulation</button>
+        </form>
+
+        <!-- Folder Upload -->
+        <div class="upload-folder">
+            <form action="{% url 'upload_folder' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="folder" webkitdirectory directory />
+                <button type="submit" onclick="showMessage('Uploading folder...')">Upload Folder</button>
+            </form>
+        </div>
+        {% if status_message %}
+            <script>
+                showMessage("{{ status_message|escapejs }}");
+            </script>
+        {% endif %}
+    </div>
+</body>
+</html>
