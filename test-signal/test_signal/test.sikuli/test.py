@@ -12,7 +12,7 @@ actions = {
     },
     "S24": {
         "check_pattern": "S26Y.png",
-        "right_click": "S24R.png",
+        "right_click": "S24_R.png",
         "type_sequence": ['H', Key.RIGHT, Key.DOWN, Key.DOWN, Key.DOWN, Key.ENTER],
         "fail_pattern": "S24Y.png",
         "fail_actions": ['H', 'C'],

@@ -26,7 +26,7 @@ if exists(Pattern("S26Y.png")):
 else:
                 print("fail") 
 if exists("S26Y.png"):
-    rightClick("S24R.png")
+    rightClick("S24_R.png")
     type('H')
     type(Key.RIGHT)
     type(Key.DOWN)
@@ -40,7 +40,7 @@ if exists("S26Y.png"):
                 type('H')
                 type('C')
                 wait(2)
-                rightClick("S24R.png")
+                rightClick("S24_R.png")
                 type('H')
                 type('E')
                 wait(2)
