@@ -1,10 +1,10 @@
-rightClick(Pattern("S26R.png"))
+rightClick(Pattern("1727620298733.png").similar(0.81))
 type('H')
 wait(2)
 type('1')
 wait(2)
 
-if exists(Pattern("S26Y.png")):
+if exists(Pattern("1727620639651.png").similar(0.97)):
     rightClick("S28R.png")
     type('H')
     type(Key.RIGHT)

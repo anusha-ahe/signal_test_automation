@@ -41,5 +41,5 @@ type(Key.ALT)
 type('C')
 type('R')    
 type(Key.ENTER)
-run("Westcad.exe")
+run ("D:\\WORK IN PROgRESS\\testing\\GWRD_MOD\\GHD_WESTCAD1\\Westcad.exe")
 

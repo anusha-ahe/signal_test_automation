@@ -33,7 +33,7 @@ def simulation_page(request):
         if action == 'run_gsim':
             status_message = run_sikuli_script("GSIM.py", "D:/signal/test-signal/test_signal/GSIM.sikuli")
         elif action == 'run_test':
-            status_message = run_sikuli_script("IF-ELSE.py", "D:/signal/test-signal/test_signal/IF-ELSE.sikuli")
+            status_message = run_sikuli_script("generate.py", "D:/signal/test-signal/test_signal/IF-ELSE.sikuli")
     return render(request, 'start_sim.html', {'status_message': status_message})
 
 
