@@ -1,0 +1,17 @@
+[2024-10-17 19:49:54] Test case passed for test signal: p with main signal as it is red value C_3L2 1L1
+[2024-10-17 19:50:02] Test case passed for test signal: p with main signal as it is red value C_3L1 1L1
+[2024-10-17 19:50:11] Test case passed for test signal: p with main signal as it is red value 3L2_ALT 1L1
+[2024-10-17 19:50:34] Test case passed for test signal: p with main signal as it is red value 3L1_ALT2 1L1
+[2024-10-17 19:50:43] Test case passed for test signal: p with main signal as it is red value 3L1_ALT1 1L1
+[2024-10-17 19:50:51] Test case passed for test signal: p with main signal as it is red value 3L1 1L1
+[2024-10-17 19:50:59] Test case passed for test signal: p with main signal as it is red value 3L2 1L1
+[2024-10-17 19:58:20] Test case passed for test signal: p with main signal as it is red value C_3L2 1L1
+[2024-10-17 19:58:28] Test case passed for test signal: p with main signal as it is red value C_3L1 1L1
+[2024-10-17 19:58:37] Test case passed for test signal: p with main signal as it is red value 3L2_ALT 1L1
+[2024-10-17 19:58:59] Test case passed for test signal: p with main signal as it is red value 3L1_ALT2 1L1
+[2024-10-17 19:59:08] Test case passed for test signal as None: C_3L3 with main signal as 1L1
+[2024-10-17 19:59:13] Test case passed for test signal: p with main signal as it is red value 3L1_ALT1 1L1
+[2024-10-17 19:59:22] Test case passed for test signal as None: 1L1 with main signal as 1L1
+[2024-10-17 19:59:40] Test case passed for test signal: p with main signal as it is red value 3L1 1L1
+[2024-10-17 20:00:04] Test case passed for test signal: p with main signal as it is red value 3L2 1L1
+[2024-10-17 20:00:27] Test case passed for test signal as None: 3L3 with main signal as 1L1
