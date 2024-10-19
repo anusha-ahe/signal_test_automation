@@ -1,6 +1,7 @@
 import csv
 import os
 import re
+import time
 from collections import defaultdict
 from datetime import datetime
 
@@ -40,6 +41,7 @@ class RunTest:
         return result
 
     def create_test_case_dict(self, csv_file_path, signal_name):
+        signal_name = signal_name.replace('-', '_')
         print("Creating test case dict for signal: {} from CSV file: {}".format(signal_name, csv_file_path))
         try:
             with open(csv_file_path, mode='r') as file:
@@ -92,52 +94,89 @@ class RunTest:
                 image_name = self.get_image_name(test_signal)
                 position = self.menu[image_name].index(test_signal) + 1
             print("-----", image_name, self.menu)
-            print("menu++++++++", self.menu[signal_name][0], image_name, self.menu[image_name])
             print("position", position)
             rightClick(Pattern("{}_R.png".format(image_name)))
             if test_signal.startswith('C'):
-                type('C')
+                click('calling_on.png')
             else:
-                type('H')
+                if exists(Pattern('home.png').similar(0.9)):
+                    click('home.png')
+                elif exists(Pattern('starter.png').similar(0.9)):
+                    click('starter.png')
             type(Key.RIGHT)
             for _ in range(position):
                 type('C')
+            wait(2)
             type(Key.ENTER)
             wait(wait_time)
             print("Right click action set for test signal: {}".format(test_signal))
         except Exception as e:
             print("Failed to set right click action for test signal {}: {}".format(test_signal, e))
 
-    def set_cancel_action(self, action_image, action, wait_time=1, test_signal=True):
+    def set_cancel_action(self, action_image, wait_time=1, test_signal=True):
         action_image = action_image.replace('-', '_')
-        if test_signal == True:
-            if action_image.startswith('C'):
-                action_image = self.get_image_name(action_image, True)
-            else:
-                action_image = self.get_image_name(action_image)
-        print("Setting cancel action for {} with action {}".format(action_image, action))
+        test_image = action_image
+        if test_signal:
+            action_image = self.get_image_name(action_image, True) if action_image.startswith(
+                'C') else self.get_image_name(action_image)
+        print("Setting cancel action for {}".format(action_image))
+
+        def perform_action(action_image, suffix):
+            pattern = Pattern("{}_{}.png".format(action_image, suffix)).exact()
+            print("image here", "{}_{}.png".format(action_image, suffix))
+            if exists(pattern):
+                rightClick(pattern)
+                if test_image.startswith('C'):
+                    type('C')
+                else:
+                    if exists(Pattern('home.png').similar(0.9)):
+                        print("home")
+                        click('home.png')
+                    elif exists(Pattern('starter.png').similar(0.9)):
+                        print("starter")
+                        click('starter.png')
+                return True
+            return False
+
         try:
-            if exists(Pattern("{}_{}.png".format(action_image, action)).exact()):
-                rightClick(Pattern("{}_{}.png".format(action_image, action)).exact())
-                if action_image.startswith('C'):
-                    type('C')
-                else:
-                    type('H')
-                click('cancel.png')
+            if perform_action(action_image, 'Y'):
+                print("1")
+                if exists(Pattern('cancel.png').similar(0.9)):
+                    print("cancel")
+                    click('cancel.png')
                 wait(wait_time)
-                rightClick(Pattern("{}_R.png".format(action_image, action)).exact())
-                if action_image.startswith('C'):
-                    type('C')
+                perform_action(action_image, 'R')
+                if exists(Pattern('release.png')):
+                    print("release")
+                    click('release.png')
                 else:
-                    type('H')
-                click('release.png')
-                wait(12)
+                    print("escape as no release")
+                    type(Key.ESC)
+                wait(3)
+            elif perform_action(action_image, 'R'):
+                print("2")
+                if exists(Pattern('cancel.png')):
+                    print("cancel")
+                    click('cancel.png')
+                wait(wait_time)
+                perform_action(action_image, 'R')
+                print("5")
+                if exists(Pattern('release.png')):
+                    print("release")
+                    click('release.png')
+                else:
+                    print("escape as no release")
+                    type(Key.ESC)
+                wait(2)
+
             else:
-                print("no signal set found for {}_{}.png".format(action_image, action))
+                print("No signal set found for {}_{}.png".format(action_image))
+
             if exists(Pattern("{}_R.png".format(action_image)).exact()):
-                print("cancel action for {} successful".format(action_image))
+                print("Cancel action for {} successful".format(action_image))
             else:
-                print("cancel action for {} failed".format(action_image))
+                print("Cancel action for {} failed".format(action_image))
+
         except Exception as e:
             print("Failed to set cancel action for {}: {}".format(action_image, e))
 
@@ -153,40 +192,45 @@ class RunTest:
                 for signal_name in self.test_name.keys():
                     signal_name = signal_name.replace('-', '_')
                     print("Processing signal: {}".format(signal_name))
-                    print("{}_R.png".format(signal_name))
-                    if exists(Pattern("{}_R.png".format(signal_name))):
-                        self.set_rigt_click_action_for_main_image(signal_name)
-                        if exists(Pattern("{}_Y.png".format(signal_name))):
+                    if signal_name.startswith('C') or signal_name.startswith('c'):
+                        main_signal_image = self.get_image_name(signal_name, True)
+                    else:
+                        main_signal_image = self.get_image_name(signal_name)
+                    if exists(Pattern("{}_R.png".format(main_signal_image))):
+                        self.set_right_click_action_for_test_signal(signal_name)
+                        if exists(Pattern("{}_Y.png".format(main_signal_image))):
                             print(self.test_name, self.test_name[signal_name])
                             for test_signal, value in self.test_name[signal_name].items():
-                                print("here++++++", test_signal)
                                 test_signal = test_signal.replace('-', '_')
-                                self.set_right_click_action_for_test_signal(test_signal)
-                                if value.lower() in ['p', 'x']:
-                                    if test_signal.startswith('C'):
-                                        image_name = self.get_image_name(test_signal, True)
+                                check_image = self.get_image_name(test_signal, True) if test_signal.startswith('c') or test_signal.startswith('C') else self.get_image_name(test_signal)
+                                print("========", check_image, main_signal_image, test_signal)
+                                if check_image != main_signal_image:
+                                    self.set_right_click_action_for_test_signal(test_signal)
+                                    if value.lower() in ['p', 'x']:
+                                        if test_signal.startswith('C'):
+                                            image_name = self.get_image_name(test_signal, True)
+                                        else:
+                                            image_name = self.get_image_name(test_signal)
+                                        if not exists(Pattern("{}_R.png".format(image_name))):
+                                            self.log_with_timestamp(
+                                                "Test case failed for test signal as it is not red {}: {} with main signal {}".format(
+                                                    value.lower(), test_signal, signal_name), log_file)
+                                        else:
+                                            self.log_with_timestamp(
+                                                "Test case passed for test signal: {} with main signal as it is red value {} {}".format(
+                                                    value.lower(), test_signal, signal_name), log_file)
                                     else:
-                                        image_name = self.get_image_name(test_signal)
-                                    if not exists(Pattern("{}_R.png".format(image_name))):
-                                        self.log_with_timestamp(
-                                            "Test case failed for test signal as it is not red {}: {} with main signal {}".format(
-                                                value.lower(), test_signal, signal_name), log_file)
-                                    else:
-                                        self.log_with_timestamp(
-                                            "Test case passed for test signal: {} with main signal as it is red value {} {}".format(
-                                                value.lower(), test_signal, signal_name), log_file)
-                                    self.set_cancel_action(test_signal, 'Y', test_signal=True)
-                                else:
-                                    if test_signal.startswith('C'):
-                                        image_name = self.get_image_name(test_signal, True)
-                                    else:
-                                        image_name = self.get_image_name(test_signal)
-                                    if exists(Pattern("{}_Y.png".format(image_name))):
-                                        self.log_with_timestamp(
-                                            "Test case passed for test signal as {}: {} with main signal as {}".format(
-                                                value, test_signal, signal_name), log_file)
-                                self.set_cancel_action(test_signal, 'Y', test_signal=True)
-                            self.set_cancel_action(signal_name, 'Y')
+                                        if test_signal.startswith('C'):
+                                            image_name = self.get_image_name(test_signal, True)
+                                        else:
+                                            image_name = self.get_image_name(test_signal)
+                                        if exists(Pattern("{}_Y.png".format(image_name))):
+                                            self.log_with_timestamp(
+                                                "Test case passed for test signal as {}: {} with main signal as {}".format(
+                                                    value, test_signal, signal_name), log_file)
+                                    self.set_cancel_action(test_signal, test_signal=True)
+                            time.sleep(10)
+                            self.set_cancel_action(main_signal_image)
                         else:
                             print("Unable to set main signal {}".format(signal_name))
                     else:
@@ -197,7 +241,7 @@ class RunTest:
 
 if __name__ == "__main__":
     test_runner = RunTest()
-    csv_file_path = "D:\\signal\\test-signal\\test_signal\\Generate.sikuli\\signal_sheet1.csv"
+    csv_file_path = "D:\\signal\\test-signal\\test_signal\\Generate.sikuli\\signal_sheet.csv"
     log_file = "D:\\signal\\test-signal\\test_signal\\Generate.sikuli\\log.txt"
-    signal_name = "1L1"
+    signal_name = "1L1-ALT1"
     test_runner.create_and_run_action_for_test_case(csv_file_path, signal_name, log_file)
